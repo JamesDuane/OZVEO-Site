@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OZVEO — Full Site Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000102;--panel:#050911;--panel2:#080e1a;--text:#f7f9ff;--muted:#a3aec1;
+  --muted2:#6e7b92;--blue:#315bff;--line:rgba(255,255,255,.075);--max:1220px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:linear-gradient(180deg,#000102 0%,#010204 48%,#000102 100%);
+  color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none} button,input,textarea,select{font:inherit}
+h1,h2,h3,h4,.brand-name{font-family:Sora,Inter,sans-serif}
+.wrap{width:min(var(--max),calc(100% - 42px));margin:auto;position:relative;z-index:3}
+
+/* continuous environment */
+.env{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.grid{position:absolute;left:-22vw;right:-22vw;bottom:-7vh;height:98vh;
+ background:linear-gradient(rgba(72,104,255,.28) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(72,104,255,.28) 1px,transparent 1px);
+ background-size:78px 78px;transform-origin:center bottom;
+ transform:perspective(1040px) rotateX(76deg) translate3d(0,var(--gridY,0),0) scale(1.95);
+ filter:drop-shadow(0 0 20px rgba(42,80,255,.12));
+ -webkit-mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.94) 40%,rgba(0,0,0,.65) 70%,transparent 100%);
+ mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.94) 40%,rgba(0,0,0,.65) 70%,transparent 100%);
+}
+.haze{position:absolute;border-radius:50%;filter:blur(120px);mix-blend-mode:screen;will-change:transform,opacity}
+.h1{width:1180px;height:1180px;left:-430px;top:-180px;opacity:var(--h1o,.15);transform:translate3d(var(--h1x,0),var(--h1y,0),0);
+ background:radial-gradient(circle,rgba(18,70,215,.12),rgba(18,70,215,.05) 30%,rgba(18,70,215,.015) 55%,transparent 80%)}
+.h2{width:1320px;height:1320px;right:-500px;top:0;opacity:var(--h2o,.12);transform:translate3d(var(--h2x,0),var(--h2y,0),0);
+ background:radial-gradient(circle,rgba(14,58,196,.10),rgba(14,58,196,.045) 32%,rgba(14,58,196,.014) 56%,transparent 82%)}
+.h3{width:1300px;height:1300px;left:12%;top:10vh;opacity:var(--h3o,.09);transform:translate3d(var(--h3x,0),var(--h3y,0),0);
+ background:radial-gradient(circle,rgba(38,96,255,.08),rgba(20,60,186,.035) 34%,rgba(20,60,186,.012) 58%,transparent 82%)}
+.dot-layer{position:absolute;inset:0;overflow:hidden}
+.dot{position:absolute;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;opacity:.025;background:rgba(38,116,255,.1);will-change:transform,opacity,box-shadow}
+
+/* global nav */
+.nav-shell{position:sticky;top:0;z-index:100;background:rgba(0,2,7,.84);backdrop-filter:blur(20px) saturate(1.15);border-bottom:1px solid rgba(255,255,255,.055)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.brand img{width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(49,91,255,.22))}
+.brand-name{font-size:14px;letter-spacing:.23em;font-weight:650}
+.navlinks{display:flex;align-items:center;gap:26px;color:#b8c2d4;font-size:12px}
+.navlinks a{cursor:pointer} .navlinks a:hover{color:#fff}
+.nav-cta,.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:13px 18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.025);font-size:12px;font-weight:750;cursor:pointer}
+.btn.primary,.nav-cta.primary{border:0;background:linear-gradient(135deg,#123fd4,#315bff);box-shadow:0 14px 42px rgba(33,74,255,.22)}
+.menu-btn{display:none;width:42px;height:42px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.025);position:relative}
+.menu-btn:before,.menu-btn:after,.menu-btn span{content:"";position:absolute;left:12px;right:12px;height:1.5px;background:#dfe6ff;border-radius:2px}
+.menu-btn:before{top:13px} .menu-btn span{top:20px} .menu-btn:after{top:27px}
+.drawer{display:none;position:fixed;top:68px;left:0;right:0;z-index:99;padding:12px 14px 18px;background:rgba(0,2,7,.97);backdrop-filter:blur(22px);border-bottom:1px solid rgba(255,255,255,.07);transform:translateY(-12px);opacity:0;pointer-events:none;transition:.22s ease}
+.drawer.open{transform:none;opacity:1;pointer-events:auto}
+.drawer a{display:flex;min-height:48px;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.05);color:#bcc7d9;cursor:pointer}
+.drawer a:after{content:"→";color:#6d80ba}
+.drawer a.primary{margin-top:10px;border:1px solid rgba(49,91,255,.34);border-radius:12px;background:rgba(49,91,255,.09);color:#fff}
+
+/* route system */
+.route{display:none;position:relative;z-index:2}
+.route.active{display:block}
+.page-hero{min-height:calc(100vh - 74px);display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:60px;padding:80px 0 64px}
+.eyebrow,.kicker{display:flex;align-items:center;gap:10px;color:#829eff;font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.eyebrow:before,.kicker:before{content:"";width:30px;height:1px;background:#315bff}
+h1{font-size:clamp(54px,7vw,96px);line-height:.93;letter-spacing:-.055em;margin:18px 0 22px;font-weight:650}
+h2{font-size:clamp(40px,5vw,66px);line-height:1;letter-spacing:-.047em;margin:14px 0 18px;font-weight:620}
+h3{font-size:26px;line-height:1.15;letter-spacing:-.025em;margin:0 0 11px}
+.lead,.section-copy{color:#a4afc2;line-height:1.72;font-size:18px;max-width:690px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:26px;color:#71809a;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+.hero-meta span{display:flex;align-items:center;gap:8px} .hero-meta i{width:5px;height:5px;border-radius:50%;background:#315bff;box-shadow:0 0 8px #315bff}
+.hero-visual{min-height:450px;display:grid;place-items:center}
+.orb{width:min(500px,42vw);aspect-ratio:1;position:relative;display:grid;place-items:center;isolation:isolate}
+.orb .ring{position:absolute;border:1px solid rgba(82,113,230,.16);border-radius:50%;z-index:1}
+.orb .r1{width:98%;height:72%;transform:rotate(-13deg)} .orb .r2{width:78%;height:98%;transform:rotate(47deg)} .orb .r3{width:88%;height:52%;transform:rotate(18deg)}
+.orb img{width:92%;height:92%;object-fit:contain;z-index:3;filter:drop-shadow(0 18px 38px rgba(24,55,180,.22))}
+.orb:before{content:"";position:absolute;width:62%;height:62%;border-radius:50%;background:radial-gradient(circle,rgba(41,82,255,.14),transparent 68%);filter:blur(25px)}
+.section{padding:106px 0;border-top:1px solid rgba(255,255,255,.045)}
+.section-head{max-width:780px;margin-bottom:44px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px} .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card,.band{border:1px solid var(--line);border-radius:25px;background:linear-gradient(155deg,rgba(7,12,23,.88),rgba(2,5,10,.95));padding:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.card p,.band p{color:#98a5ba;line-height:1.65;margin:0}
+.number{color:#657593;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:42px}
+.feature-list{display:grid;gap:12px;margin-top:20px}
+.feature{display:flex;gap:11px;color:#9daabe;font-size:14px;line-height:1.55} .feature i{width:7px;height:7px;border-radius:50%;background:#315bff;box-shadow:0 0 8px rgba(49,91,255,.55);margin-top:7px;flex:none}
+.card-link{display:inline-flex;margin-top:18px;color:#b8c6ff;font-size:11px;font-weight:750;cursor:pointer} .card-link:after{content:"→";margin-left:8px}
+.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:58px;align-items:start} .sticky{position:sticky;top:104px}
+.step{display:grid;grid-template-columns:74px 1fr;gap:22px;padding:26px 0;border-top:1px solid var(--line)} .step:first-child{border-top:0} .step-num{font-family:Sora;color:#6f8fff;font-size:12px;letter-spacing:.14em}
+.step p{color:#98a5ba;line-height:1.65;margin:5px 0 0}
+.callout{display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center;padding:40px;border:1px solid rgba(80,113,224,.20);border-radius:28px;background:radial-gradient(circle at 80% 50%,rgba(47,85,255,.10),transparent 32%),rgba(4,8,16,.80)}
+.callout p{color:#98a5ba;line-height:1.65;max-width:680px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px} .badge{padding:8px 10px;border:1px solid var(--line);border-radius:999px;color:#8494af;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px} .tab{border:1px solid var(--line);background:rgba(255,255,255,.02);color:#8e9db8;padding:10px 13px;border-radius:999px;font-size:11px} .tab.active{color:#fff;border-color:rgba(77,111,255,.4);background:rgba(49,91,255,.10)}
+.lab-stage{display:grid;grid-template-columns:.85fr 1.15fr;border:1px solid var(--line);border-radius:28px;overflow:hidden;background:linear-gradient(145deg,#050a14,#02050a);min-height:470px}
+.lab-side,.lab-preview{padding:34px} .lab-side{border-right:1px solid var(--line)} .lab-preview{display:grid;align-content:center}
+.mock{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#040812;box-shadow:0 28px 70px rgba(0,0,0,.34)} .mock-top{height:38px;border-bottom:1px solid var(--line);display:flex;gap:7px;align-items:center;padding:0 14px} .mock-top i{width:7px;height:7px;border-radius:50%;background:#44536c} .mock-body{padding:34px} .mock-chip{display:inline-block;padding:7px 9px;border-radius:999px;background:rgba(49,91,255,.1);color:#8aa4ff;font-size:9px;letter-spacing:.14em;text-transform:uppercase} .mock-title{font-family:Sora;font-size:clamp(28px,4vw,52px);line-height:1;letter-spacing:-.05em;margin:18px 0 12px} .mock-copy{color:#8797b0;line-height:1.6}
+.form-shell{display:grid;grid-template-columns:.82fr 1.18fr;gap:50px;align-items:start} .form{padding:30px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(155deg,rgba(7,12,23,.92),rgba(2,5,10,.97))} .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px} .field{display:grid;gap:8px;margin-bottom:14px} .field.full{grid-column:1/-1} label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8190aa} input,textarea,select{width:100%;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:#02050b;color:#eef3ff;padding:14px 15px;outline:none} textarea{min-height:128px;resize:vertical} .form-note{color:#65738e;font-size:11px;line-height:1.5;margin-top:10px}
+
+/* footer */
+footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,.055);padding:44px 0 30px;background:rgba(0,1,3,.55)} .footer-grid{display:grid;grid-template-columns:1.2fr repeat(3,.7fr);gap:34px} .footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:10px} .footer-brand img{width:40px;height:40px;object-fit:contain} .footer-brand span{font-family:Sora;letter-spacing:.22em;font-size:14px} .footer-copy{color:#6f7c93;max-width:38ch;font-size:12px;line-height:1.6} .footer-col h4{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#8da0c0;margin:0 0 14px} .footer-col a{display:block;color:#74829b;font-size:12px;margin:9px 0;cursor:pointer}
+
+@media(max-width:980px){
+  .navlinks,.nav-cta{display:none} .menu-btn{display:block} .drawer{display:block}
+  .nav{height:68px} .page-hero{min-height:auto;grid-template-columns:1fr;padding:58px 0 46px;gap:20px}
+  .hero-visual{min-height:300px} .orb{width:min(430px,82vw)}
+  .grid3,.grid2,.split,.form-shell{grid-template-columns:1fr} .sticky{position:relative;top:auto}
+  .footer-grid{grid-template-columns:1fr 1fr} .lab-stage{grid-template-columns:1fr} .lab-side{border-right:0;border-bottom:1px solid var(--line)}
+}
+@media(max-width:640px){
+  .wrap{width:min(var(--max),calc(100% - 28px))}
+  h1{font-size:clamp(45px,14vw,68px)} h2{font-size:clamp(36px,11vw,52px)} .lead,.section-copy{font-size:16px}
+  .section{padding:78px 0} .card,.band,.callout,.form{padding:23px} .field-grid{grid-template-columns:1fr}
+  .callout{grid-template-columns:1fr} .footer-grid{grid-template-columns:1fr} .hero-visual{min-height:260px}
+  .grid{background-size:62px 62px}
+}
+
+.ozv-logo-image{display:block;background-image:url("data:image/webp;base64,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");background-repeat:no-repeat;background-position:center;background-size:contain;flex:0 0 auto;}
+.brand .ozv-logo-image{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(49,91,255,.22));}
+.orb .ozv-logo-image{position:relative;width:92%;height:92%;z-index:3;filter:drop-shadow(0 18px 38px rgba(24,55,180,.22));}
+.footer-brand .ozv-logo-image{width:40px;height:40px;}
+
+</style>
+</head>
+<body>
+<div class="env" aria-hidden="true">
+  <div class="grid"></div><div class="haze h1"></div><div class="haze h2"></div><div class="haze h3"></div><div class="dot-layer" id="dots"></div>
+</div>
+
+<div class="nav-shell">
+  <div class="wrap nav">
+    <a class="brand" data-route="home"><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span><span class="brand-name">OZVEO</span></a>
+    <div class="navlinks">
+      <a data-route="services">Services</a><a data-route="lab">Design Lab</a><a data-route="process">Process</a><a data-route="about">About</a><a data-route="audit">Free Audit</a>
+    </div>
+    <a class="nav-cta primary" data-route="project">Start a Project</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span></button>
+  </div>
+</div>
+<div class="drawer" id="drawer">
+  <a data-route="services">Services</a><a data-route="lab">Design Lab</a><a data-route="process">Process</a><a data-route="about">About</a><a data-route="audit">Free Audit</a><a class="primary" data-route="project">Start a Project</a>
+</div>
+
+<main>
+<section class="route active" data-page="home">
+  <div class="wrap page-hero">
+    <div><div class="eyebrow">OZVEO · Web Design & Digital Systems</div><h1>Modern websites. Smarter systems. Real growth.</h1>
+    <p class="lead">Premium web design, business dashboards, and practical lead systems built as one coherent digital presence.</p>
+    <div class="hero-actions"><a class="btn primary" data-route="audit">Get a Free Website Audit</a><a class="btn" data-route="lab">Explore the Design Lab</a></div>
+    <div class="hero-meta"><span><i></i>Web Design</span><span><i></i>Dashboards</span><span><i></i>Automation</span></div></div>
+    <div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div>
+  </div>
+  <div class="section"><div class="wrap">
+    <div class="section-head"><div class="kicker">What OZVEO builds</div><h2>A stronger digital presence. A smarter business behind it.</h2><p class="section-copy">The website is the front door. The systems behind it determine what happens next.</p></div>
+    <div class="grid3">
+      <div class="card"><div class="number">01 · Presence</div><h3>Web Design</h3><p>Custom, responsive websites built for clarity, trust, conversion, and a premium first impression.</p><a class="card-link" data-route="web">Explore web design</a></div>
+      <div class="card"><div class="number">02 · Visibility</div><h3>Business Dashboards</h3><p>Focused operating views for leads, activity, status, and the business signals that actually matter.</p><a class="card-link" data-route="dash">Explore dashboards</a></div>
+      <div class="card"><div class="number">03 · Follow-through</div><h3>Lead & Automation Systems</h3><p>Practical workflows that reduce dropped inquiries and manual follow-up without removing human judgment.</p><a class="card-link" data-route="automation">Explore automation</a></div>
+    </div>
+  </div></div>
+  <div class="section"><div class="wrap"><div class="callout"><div><div class="kicker">OZVEO Design Lab</div><h3>See how the system changes for different businesses.</h3><p>Concept work is labeled honestly and used to demonstrate the quality and thinking behind the build.</p></div><a class="btn primary" data-route="lab">Enter the Design Lab</a></div></div></div>
+</section>
+
+<section class="route" data-page="services">
+  <div class="wrap page-hero"><div><div class="eyebrow">OZVEO Services</div><h1>Design the presence. Build the system behind it.</h1><p class="lead">OZVEO combines premium web design with the operational layer most small-business sites never get: clearer lead capture, business visibility, and practical automation.</p><div class="hero-actions"><a class="btn primary" data-route="project">Start a Project</a><a class="btn" data-route="audit">Get a Free Audit</a></div></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap"><div class="grid3">
+    <div class="card"><div class="number">01</div><h3>Web Design</h3><p>Strategy-led websites with sharp positioning, responsive interaction, conversion structure, and premium visual direction.</p><a class="card-link" data-route="web">Explore</a></div>
+    <div class="card"><div class="number">02</div><h3>Business Dashboards</h3><p>Focused internal interfaces that turn scattered operating information into one clearer place to see what matters.</p><a class="card-link" data-route="dash">Explore</a></div>
+    <div class="card"><div class="number">03</div><h3>Lead & Automation</h3><p>Practical workflows for capture, routing, follow-up, and status visibility.</p><a class="card-link" data-route="automation">Explore</a></div>
+  </div></div></div>
+</section>
+
+<section class="route" data-page="web">
+  <div class="wrap page-hero"><div><div class="eyebrow">Web Design</div><h1>Make the business look as strong online as it is in real life.</h1><p class="lead">A premium website should make the offer clearer, the business more credible, and the next step easier to take.</p><div class="hero-actions"><a class="btn primary" data-route="project">Discuss a Project</a><a class="btn" data-route="services">All Services</a></div></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap split"><div class="sticky"><div class="kicker">What this can include</div><h2>A focused system, not a pile of features.</h2></div><div class="band"><div class="feature-list"><div class="feature"><i></i>Positioning & page architecture</div><div class="feature"><i></i>Premium responsive UI</div><div class="feature"><i></i>Conversion-focused calls to action</div><div class="feature"><i></i>Mobile performance & accessibility</div><div class="feature"><i></i>Search-ready structure</div><div class="feature"><i></i>Launch QA & handoff</div></div></div></div></div>
+</section>
+
+<section class="route" data-page="dash">
+  <div class="wrap page-hero"><div><div class="eyebrow">Business Dashboards</div><h1>Put the information you keep chasing into one clearer operating view.</h1><p class="lead">Dashboards should answer decisions, not create another complicated system to maintain.</p><div class="hero-actions"><a class="btn primary" data-route="project">Discuss a Dashboard</a><a class="btn" data-route="services">All Services</a></div></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap"><div class="grid3"><div class="card"><div class="number">Visibility</div><h3>Lead Pipeline</h3><p>See new inquiries, current status, ownership, and what needs action.</p></div><div class="card"><div class="number">Operations</div><h3>Business KPIs</h3><p>Track only the signals that support real decisions.</p></div><div class="card"><div class="number">Clarity</div><h3>Role Views</h3><p>Different people see the information they need without the noise they do not.</p></div></div></div></div>
+</section>
+
+<section class="route" data-page="automation">
+  <div class="wrap page-hero"><div><div class="eyebrow">Lead & Automation Systems</div><h1>Build the follow-through your website should have had from day one.</h1><p class="lead">A great website still leaks value when inquiries disappear into an inbox or responses depend on memory.</p><div class="hero-actions"><a class="btn primary" data-route="project">Discuss a System</a><a class="btn" data-route="services">All Services</a></div></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap split"><div class="sticky"><div class="kicker">What this can include</div><h2>Automation where it actually removes friction.</h2></div><div class="band"><div class="feature-list"><div class="feature"><i></i>Structured lead capture</div><div class="feature"><i></i>Lead routing and notifications</div><div class="feature"><i></i>Follow-up sequences</div><div class="feature"><i></i>Internal handoff logic</div><div class="feature"><i></i>Status tracking</div><div class="feature"><i></i>Human override at important steps</div></div></div></div></div>
+</section>
+
+<section class="route" data-page="lab">
+  <div class="wrap page-hero"><div><div class="eyebrow">OZVEO Design Lab</div><h1>See the design thinking before you hire it.</h1><p class="lead">Concept studies—not fake client case studies—showing how the OZVEO system changes across different kinds of businesses.</p></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap"><div class="tabs"><button class="tab active" data-lab="contractor">Contractor</button><button class="tab" data-lab="restaurant">Restaurant</button><button class="tab" data-lab="fitness">Fitness</button><button class="tab" data-lab="professional">Professional</button></div><div class="lab-stage"><div class="lab-side"><div class="kicker">What changes</div><h3>Offer hierarchy, proof, conversion path, and visual tone.</h3><p class="section-copy">The structure should reflect what the business needs people to understand and do next.</p><div class="badges"><span class="badge">Concept Work</span><span class="badge">No Fake Clients</span></div></div><div class="lab-preview"><div class="mock"><div class="mock-top"><i></i><i></i><i></i></div><div class="mock-body"><span class="mock-chip" id="labChip">Local Service Concept</span><div class="mock-title" id="labTitle">Turn service traffic into booked work.</div><div class="mock-copy" id="labCopy">A faster, clearer site with trust proof, service-area structure, quote capture, and a dashboard-ready lead path.</div></div></div></div></div></div></div>
+</section>
+
+<section class="route" data-page="process">
+  <div class="wrap page-hero"><div><div class="eyebrow">The OZVEO Process</div><h1>Enough structure to stay sharp. Enough flexibility to build the right thing.</h1><p class="lead">The process prevents two expensive failures: building before the problem is understood and polishing a system nobody knows how to operate.</p></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap split"><div class="sticky"><div class="kicker">Five stages</div><h2>From current state to working system.</h2></div><div><div class="step"><div class="step-num">01</div><div><h3>Audit</h3><p>Understand the current website, offer, customer path, and operational friction.</p></div></div><div class="step"><div class="step-num">02</div><div><h3>Strategy</h3><p>Decide what the site and systems need to accomplish before designing screens.</p></div></div><div class="step"><div class="step-num">03</div><div><h3>Build</h3><p>Create the visual system, responsive experience, and required workflows.</p></div></div><div class="step"><div class="step-num">04</div><div><h3>Launch</h3><p>QA the experience, connect the production stack, and prepare the business to use it.</p></div></div><div class="step"><div class="step-num">05</div><div><h3>Improve</h3><p>Use real feedback and performance signals to refine what matters.</p></div></div></div></div></div>
+</section>
+
+<section class="route" data-page="about">
+  <div class="wrap page-hero"><div><div class="eyebrow">About OZVEO</div><h1>Better design is only half the opportunity.</h1><p class="lead">Many small businesses either get a decent-looking website with weak systems behind it, or complicated software with no coherent customer experience. OZVEO is being built to make the two reinforce each other.</p><div class="hero-actions"><a class="btn primary" data-route="project">Work with OZVEO</a><a class="btn" data-route="lab">See the Design Lab</a></div></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap split"><div class="sticky"><div class="kicker">The philosophy</div><h2>Make the outside sharper. Make the inside smarter.</h2></div><div class="band"><div class="feature-list"><div class="feature"><i></i>Design should increase clarity, not just decoration.</div><div class="feature"><i></i>Automation should reduce friction, not remove judgment.</div><div class="feature"><i></i>Dashboards should answer decisions, not display every metric.</div><div class="feature"><i></i>Concept work stays labeled honestly until real client work replaces it.</div></div></div></div></div>
+</section>
+
+<section class="route" data-page="audit">
+  <div class="wrap page-hero"><div><div class="eyebrow">Free Website Audit</div><h1>Find the gaps before paying to rebuild everything.</h1><p class="lead">Send the current website and some context. The audit focuses on positioning, mobile experience, conversion path, trust, and lead capture.</p></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap form-shell"><div><div class="kicker">What we review</div><h2>A focused first look.</h2><div class="feature-list"><div class="feature"><i></i>First impression and positioning</div><div class="feature"><i></i>Mobile UX and hierarchy</div><div class="feature"><i></i>Conversion and contact path</div><div class="feature"><i></i>Trust and proof structure</div><div class="feature"><i></i>Lead capture and follow-up gaps</div></div></div><form class="form" onsubmit="event.preventDefault();this.querySelector('.form-note').textContent='Preview only — submission routing will be connected before launch.'"><div class="field-grid"><div class="field"><label>Business name</label><input required></div><div class="field"><label>Website</label><input required placeholder="https://"></div><div class="field"><label>Your name</label><input required></div><div class="field"><label>Email</label><input required type="email"></div><div class="field full"><label>What feels weakest right now?</label><textarea></textarea></div><div class="field full"><button class="btn primary">Request the Audit</button><div class="form-note">Preview form only. No data is being sent.</div></div></div></form></div></div>
+</section>
+
+<section class="route" data-page="project">
+  <div class="wrap page-hero"><div><div class="eyebrow">Start a Project</div><h1>Tell us what the business needs to become next.</h1><p class="lead">Share the current situation, the result you want, and which parts of the OZVEO system may be relevant.</p></div><div class="hero-visual"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span></div></div></div>
+  <div class="section"><div class="wrap form-shell"><div><div class="kicker">Project fit</div><h2>Start with the outcome.</h2><p class="section-copy">You do not need a perfect technical brief. Tell us what is happening now and what needs to change.</p></div><form class="form" onsubmit="event.preventDefault();this.querySelector('.form-note').textContent='Preview only — project inquiry routing will be connected before launch.'"><div class="field-grid"><div class="field"><label>Name</label><input required></div><div class="field"><label>Business</label><input required></div><div class="field"><label>Email</label><input type="email" required></div><div class="field"><label>Website</label><input></div><div class="field full"><label>Interested in</label><select><option>Web Design</option><option>Business Dashboard</option><option>Lead & Automation</option><option>Multiple / not sure</option></select></div><div class="field full"><label>What needs to change?</label><textarea required></textarea></div><div class="field full"><button class="btn primary">Send Project Brief</button><div class="form-note">Preview form only. No data is being sent.</div></div></div></form></div></div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap"><div class="footer-grid"><div><div class="footer-brand"><span class="ozv-logo-image" role="img" aria-label="OZVEO logo"></span><span>OZVEO</span></div><div class="footer-copy">Modern websites and digital systems for businesses that want a stronger presence and a smarter operation behind it.</div></div><div class="footer-col"><h4>Explore</h4><a data-route="services">Services</a><a data-route="lab">Design Lab</a><a data-route="process">Process</a><a data-route="about">About</a></div><div class="footer-col"><h4>Services</h4><a data-route="web">Web Design</a><a data-route="dash">Business Dashboards</a><a data-route="automation">Lead & Automation</a></div><div class="footer-col"><h4>Start</h4><a data-route="audit">Free Website Audit</a><a data-route="project">Start a Project</a></div></div></div>
+</footer>
+
+<script>
+const routes=[...document.querySelectorAll('.route')];
+const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('menuBtn');
+function showRoute(name){
+  routes.forEach(r=>r.classList.toggle('active',r.dataset.page===name));
+  drawer.classList.remove('open');document.body.style.overflow='';
+  scrollTo({top:0,behavior:'instant'});
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-route]');
+  if(a){e.preventDefault();showRoute(a.dataset.route)}
+});
+menuBtn.addEventListener('click',()=>{const open=drawer.classList.toggle('open');document.body.style.overflow=open?'hidden':''});
+
+/* animated influence dots */
+const layer=document.getElementById('dots');let dots=[],w=innerWidth,h=innerHeight,spacing=42;
+function buildDots(){
+  layer.innerHTML='';dots=[];w=innerWidth;h=innerHeight;spacing=w<700?34:42;
+  const cols=Math.ceil(w/spacing)+2,rows=Math.ceil(h/spacing)+2;
+  for(let r=-1;r<rows;r++)for(let c=-1;c<cols;c++){const x=c*spacing+spacing*.38,y=r*spacing+spacing*.1,el=document.createElement('i');el.className='dot';el.style.left=x+'px';el.style.top=y+'px';layer.appendChild(el);const seed=((c*92837111)^(r*689287499))>>>0;dots.push({el,x,y,t:(seed%1000)/1000*Math.PI*2})}
+}
+function ease(d,r){const t=Math.max(0,1-d/r),e=t*t*(3-2*t);return e*e}
+function animate(t){
+  const p=(Math.sin(t*.000095)+1)*.5,q=(Math.sin(t*.000071+3.65)+1)*.5,z=(Math.cos(t*.000059+2.2)+1)*.5;
+  const a={x:-w*.12+p*w*1.24,y:h*.1+p*h*.78,r:225},b={x:w*1.08-q*w*1.18,y:h*.04+z*h*.84,r:205};
+  for(const d of dots){const active=Math.min(1,ease(Math.hypot(d.x-a.x,d.y-a.y),a.r)+ease(Math.hypot(d.x-b.x,d.y-b.y),b.r)*.94);const s=(.58+active*2.55)*(1+Math.sin(t*.00073+d.t)*.018);d.el.style.opacity=(.025+active*.70).toFixed(3);d.el.style.transform=`scale(${s.toFixed(3)})`;d.el.style.boxShadow=`0 0 ${Math.round(2+active*12)}px rgba(38,116,255,${(active*.46).toFixed(3)})`}
+  requestAnimationFrame(animate);
+}
+buildDots();addEventListener('resize',buildDots,{passive:true});requestAnimationFrame(animate);
+
+/* seamless scroll haze */
+function wave(y,len,p){return (Math.sin((y/len)*Math.PI*2+p)+1)*.5}
+addEventListener('scroll',()=>{const y=scrollY,vh=Math.max(1,innerHeight),a=wave(y,vh*4.8,.2),b=wave(y,vh*5.9,2.1),c=wave(y,vh*6.7,4);document.documentElement.style.setProperty('--h1o',(0.07+a*.13).toFixed(3));document.documentElement.style.setProperty('--h2o',(0.06+b*.11).toFixed(3));document.documentElement.style.setProperty('--h3o',(0.045+c*.085).toFixed(3));document.documentElement.style.setProperty('--h1x',`${Math.sin(y/1350)*80}px`);document.documentElement.style.setProperty('--h1y',`${Math.cos(y/1580)*48}px`);document.documentElement.style.setProperty('--h2x',`${Math.cos(y/1490)*-92}px`);document.documentElement.style.setProperty('--h2y',`${Math.sin(y/1780)*58}px`);document.documentElement.style.setProperty('--h3x',`${Math.sin(y/1710+.8)*74}px`);document.documentElement.style.setProperty('--h3y',`${Math.cos(y/1980+.4)*-54}px`);document.documentElement.style.setProperty('--gridY',`${Math.sin(y/1800)*10}px`) },{passive:true});
+
+/* lab */
+const labData={contractor:['Local Service Concept','Turn service traffic into booked work.','A faster, clearer site with trust proof, service-area structure, quote capture, and a dashboard-ready lead path.'],restaurant:['Hospitality Concept','Make the first impression feel like the experience.','Menu-first UX, reservation pathways, local discovery, visual storytelling, and fast mobile interaction.'],fitness:['Fitness Concept','Sell the transformation before the consultation.','High-energy positioning, offer hierarchy, trial capture, proof, scheduling, and retention-ready systems.'],professional:['Professional Service Concept','Make expertise immediately understandable.','Authority-led structure, stronger service positioning, frictionless inquiry, and follow-up systems.']};
+document.querySelectorAll('[data-lab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-lab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');const d=labData[b.dataset.lab];labChip.textContent=d[0];labTitle.textContent=d[1];labCopy.textContent=d[2]}));
+</script>
+</body></html>
